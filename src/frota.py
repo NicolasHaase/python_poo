@@ -1,10 +1,11 @@
 class Carro:
+    id: int
     modelo: str
     marca: str
     cor: str
-    odometro = 0.0
-    motor_on = False
-    tanque: float
+    __odometro = 0.0
+    __motor_on = False
+    __tanque: float
     consumo_medio: float
 
     def __init__(self, modelo: str, marca: str, cor: str,
@@ -12,34 +13,43 @@ class Carro:
         self.modelo = modelo
         self.marca = marca
         self.cor = cor
-        self.odometro = odometro
-        self.motor_on = motor
-        self.tanque = tanque
+        self.__odometro = odometro
+        self.__motor_on = motor
+        self.__tanque = tanque
         self.consumo_medio = consumo_medio
 
+    def get_odometro(self):
+        return self.__odometro
+
+    def get_motor_on(self):
+        return self.__motor_on
+
+    def get_tanque(self):
+        return self.__tanque
+
     def ligar(self):
-        if not self.motor_on and self.tanque > 0:
+        if not self.__motor_on and self.__tanque > 0:
             self.motor_on = True
         else:
             raise Exception("Erro: Motor já ligado!")
 
     def acelerar(self, velocidade: float, tempo: float):
-        if self.motor_on and self.tanque > 0:
+        if self.__motor_on and self.__tanque > 0:
             km = velocidade * tempo
             litros = km / self.consumo_medio
-            if self.tanque >= litros:
-                self.odometro += km
-                self.tanque -= litros
+            if self.__tanque >= litros:
+                self.__odometro += km
+                self.__tanque -= litros
             else:
-                km = self.tanque * self.consumo_medio
-                self.odometro += km
-                self.tanque = 0
+                km = self.__tanque * self.consumo_medio
+                self.__odometro += km
+                self.__tanque = 0
         else:
             raise Exception("Erro: Não é possível acelerar! Motor desligado!")
 
     def desligar(self):
-        if self.motor_on:
-            self.motor_on = False
+        if self.__motor_on:
+            self.__motor_on = False
         else:
             raise Exception("Erro: Motor já desligado!")
 
@@ -49,3 +59,10 @@ class Carro:
                 f'motor {self.motor_on}\n'
                 f'nível do tanque {self.tanque} L\nconsumo médio {self.consumo_medio} Km/L')
         return info
+
+    def __repr__(self):
+        return f'Carro {self.modelo}, marca {self.marca}, '\
+                f'cor {self.cor}\n{self.__odometro} Km, '\
+                f'motor {self.__motor_on}'\
+                f'consumo medio {self.consumo_medio} Km/L'\
+                f'nivel do tanque {self.__tanque} L'
